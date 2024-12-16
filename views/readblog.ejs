@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Read Blog</title>
+    <!-- Link to Tailwind CSS for styling -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Link to Google Fonts for custom typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet"> <!-- Link to Google Fonts for Lobster -->
+    <link href="https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&display=swap" rel="stylesheet"> <!-- Link to PT Serif Font -->
+    
+    <style>
+        /* Body styling with background color and gradient */
+        body {
+            background-color: #EDE6D4; /* Base color */
+            background-image: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.1) 75%, rgba(255, 255, 255, 0.1)), 
+                              linear-gradient(225deg, rgba(255, 255, 255, 0.1) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.1) 75%, rgba(255, 255, 255, 0.1));
+            background-size: 20px 20px; /* Size of the lines */
+        }
+        /* Truncate content with a fade effect */
+        .content-truncate {
+            position: relative;
+            max-height: 60px; /* Adjust this value to control how much content is shown */
+            overflow: hidden;
+        }
+        .content-truncate::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 20px; /* Height of the fade effect */
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);
+        }
+        /* Modal styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0, 0, 0, 0.7); /* Black with opacity */
+        }
+        .modal-content {
+            font-family: 'PT Serif', serif; /* Font for modal content */
+            font-size: 1rem; 
+            padding: 10px; /* Padding around the content */
+            border-radius: 4px; /* Rounded corners for the content background */
+            background-color: #fefefe; /* Background color for modal content */
+            margin: 15% auto; /* Center modal vertically and horizontally */
+            padding: 20px; /* Padding inside modal */
+            border: 1px solid #888; /* Border for modal */
+            width: 80%; /* Width of modal */
+            border-radius: 8px; /* Rounded corners for modal */
+        }
+        /* Close button styles */
+        .close {
+            color: #aaa; /* Color for close button */
+            float: right; /* Float to the right */
+            font-size: 28px; /* Font size for close button */
+            font-weight: bold; /* Bold font for close button */
+        }
+        .close:hover,
+        .close:focus {
+            color: black; /* Change color on hover/focus */
+            text-decoration: none; /* Remove underline */
+            cursor: pointer; /* Change cursor to pointer */
+        }
+        /* Custom styles for location and titles */
+        .location {
+            color: #007bff; /* Blue color for location */
+        }
+        .modal-title {
+            font-family: 'Bebas Neue', sans-serif; /* Font for modal title */
+            font-size: 2rem; 
+            background-color: #e7f1ff; /* Light blue background for modal title */
+            padding: 10px; /* Padding around the title */
+            border-radius: 4px; /* Rounded corners for the title background */
+        }
+        .blog-posts {
+            font-family: 'Lobster', cursive; /* Use Lobster font for blog posts title */
+            font-size: 3rem; /* Adjust font size as needed */
+            text-align: center; /* Center align the title */
+        }
+        .post-title {
+            font-family: 'Bebas Neue', sans-serif; /* Font for post titles */
+            font-size: 2rem; 
+            padding: 4px; /* Padding around the title */
+            border-radius: 4px; /* Rounded corners for the title background */
+        }
+        .post-content {
+            font-family: 'PT Serif', serif; /* Font for post content */
+            font-size: 1rem; 
+            padding: 4px; /* Padding around the content */
+            border-radius: 4px; /* Rounded corners for the content background */
+        }
+    </style>
+    <script>
+        // Function to open the modal and display post details
+        function openModal(title, content, author, location) {
+            document.getElementById("modalTitle").innerText = title; // Set modal title
+            document.getElementById("modalAuthor").innerText = "By: " + author; // Set modal author
+            document.getElementById("modalContent").innerText = content; // Set modal content
+            document.getElementById("modalLocation").innerText = "Location: " + location; // Set modal location
+            document.getElementById("myModal").style.display = "block"; // Show the modal
+            document.getElementById("modalTitle").classList.add("modal-title"); // Add background color to modal title
+        }
+
+        // Function to close the modal
+        function closeModal() {
+            document.getElementById("myModal").style.display = "none"; // Hide the modal
+            document.getElementById("modalTitle").classList.remove("modal-title"); // Remove background color when closing
+        }
+
+        // Close the modal when clicking outside of it
+        window.onclick = function(event) {
+            const modal = document.getElementById("myModal");
+            if (event.target == modal) {
+                closeModal(); // Close modal if clicked outside
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="max-w-4xl mx-auto px-4 py-8">
+        <h1 class="blog-posts text-3xl font-bold text-gray-800 mb-6">Blog Posts</h1> <!-- Main title for blog posts -->
+        <div class="space-y-4">
+            <% posts.forEach((post) => { %> <!-- Loop through each post -->
+                <div class="bg-white shadow-md rounded-lg p-4 cursor-pointer" 
+                     onclick="openModal('<%= post.title %>', `<%= post.content.replace(/`/g, '\\`') %>`, '<%= post.user.username %>', '<%= post.location %>');"> <!-- Clickable post to open modal -->
+                    <h3 class="post-title text-xl font-bold text-gray-800 mb-2"><%= post.title %></h3> <!-- Post title -->
+                    <p class="text-gray-600 mb-2">By: <%= post.user.username %></p> <!-- Author of the post -->
+                    <p class="text-gray-600 mb-2 location">Location: <%= post.location %></p> <!-- Location of the post -->
+                    <div class="content-truncate">
+                        <p class="post-content text-gray-800 mb-2"><%= post.content %></p> <!-- Post content -->
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    </div>
+
+    <!-- Modal Structure -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span> <!-- Close button -->
+            <h2 id="modalTitle" class="text-xl font-bold mb-2"></h2> <!-- Modal title -->
+            <p id="modalAuthor" class="text-gray-600 mb-2"></p> <!-- Author displayed in modal -->
+            <p id="modalLocation" class="location"></p> <!-- Location displayed in modal -->
+            <p id="modalContent" class="text-gray-800"></p> <!-- Content displayed in modal -->
+        </div>
+    </div>
+</body>
+</html>

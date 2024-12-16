@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Posts</title>
+    <!-- Link to Tailwind CSS for styling -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Link to Google Fonts for various styles -->
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet"> <!-- Link to Google Fonts for Lobster -->
+    <link href="https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&display=swap" rel="stylesheet"> <!-- Link to PT Serif Font -->
+
+    <style>
+        /* Body styling with background color and gradient */
+        body {
+            background-color: #EDE6D4; /* Base color */
+            background-image: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.1) 75%, rgba(255, 255, 255, 0.1)), 
+                              linear-gradient(225deg, rgba(255, 255, 255, 0.1) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.1) 75%, rgba(255, 255, 255, 0.1));
+            background-size: 20px 20px; /* Size of the lines */
+        }
+        /* Header background styling */
+        .header-bg {
+            background: linear-gradient(to right, #1a202c, #2d3748); /* Gradient background for the header */
+        }
+        /* Footer background styling */
+        .footer-bg {
+            background-color: #2d3748; /* Darker background for the footer */
+        }
+        /* Styling for post cards with hover effects */
+        .post-card {
+            transition: transform 0.2s, box-shadow 0.2s; /* Smooth transition for hover effects */
+            cursor: pointer; /* Change cursor to pointer */
+        }
+        .post-card:hover {
+            transform: translateY(-5px); /* Lift the card on hover */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Add shadow on hover */
+        }
+        /* Truncate content with a fade effect */
+        .content-truncate {
+            position: relative;
+            max-height: 60px; /* Adjust this value to control how much content is shown */
+            overflow: hidden; /* Hide overflow content */
+        }
+        .content-truncate::after {
+            content: ''; /* Fade effect at the bottom */
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 20px; /* Height of the fade effect */
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);
+        }
+        /* Modal styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0, 0, 0, 0.7); /* Black with opacity */
+        }
+        .modal-content {
+            font-family: 'PT Serif', serif; /* Use PT Serif font */
+            font-size: 1rem; /* Adjust font size as needed */
+            background-color: #fefefe; /* Background color for modal content */
+            margin: 15% auto; /* Center modal vertically and horizontally */
+            padding: 20px; /* Padding inside modal */
+            border: 1px solid #888; /* Border for modal */
+            width: 80%; /* Width of modal */
+            border-radius: 8px; /* Rounded corners for modal */
+        }
+        /* Close button styles */
+        .close {
+            color: #aaa; /* Color for close button */
+            float: right; /* Float to the right */
+            font-size: 28px; /* Font size for close button */
+            font-weight: bold; /* Bold font for close button */
+        }
+        .close:hover,
+        .close:focus {
+            color: black; /* Change color on hover/focus */
+            text-decoration: none; /* Remove underline */
+            cursor: pointer; /* Change cursor to pointer */
+        }
+        /* Custom styles for location and titles */
+        .location {
+            color: #007bff; /* Blue color for location */
+        }
+        .modal-title {
+            font-family: 'Oswald', sans-serif; /* Use Oswald font for modal title */
+            font-size: 2rem; /* Adjust font size as needed */
+            font-weight: 400; /* Use a lighter weight */
+            background-color: #e7f1ff; /* Light blue background for modal title */
+            padding: 10px; /* Padding around the title */
+            border-radius: 4px; /* Rounded corners for the title background */
+        }
+        /* Apply Lobster font to the main blog title */
+        .blog-title {
+            font-family: 'Lobster', cursive; /* Use Lobster font */
+            font-size: 3rem; /* Adjust font size as needed */
+            padding: 10px; /* Padding around the title */
+        }
+        /* Apply Great Vibes font to "All Posts" title */
+        .all-posts-title {
+            font-family: 'Great Vibes', cursive; /* Use Great Vibes font */
+            font-size: 2.5rem; /* Adjust font size as needed */
+        }
+        /* Apply Oswald font to post titles */
+        .post-title {
+            font-family: 'Oswald', sans-serif; /* Use Oswald font */
+            font-size: 2rem; /* Adjust font size as needed */
+            font-weight: 400; /* Use a lighter weight */
+        }
+        /* Apply PT Serif font to post content */
+        .post-content {
+            font-family: 'PT Serif', serif; /* Use PT Serif font */
+            font-size: 1rem; /* Adjust font size as needed */
+        }
+    </style>
+</head>
+<body>
+    <header class="header-bg text-white fixed top-0 left-0 w-full z-10">
+        <div class="max-w-7xl mx-auto px-4 py-6 flex justify-between items-end"> 
+            <h1 class="blog-title flex-grow text-center">Wanderlust Chronicles</h1> <!-- Center the title -->
+            <nav class="mt-4 ml-auto"> 
+                <a href="/signup" class="hover:underline mr-4">Sign Up</a> <!-- Sign Up link -->
+                <a href="/login" class="hover:underline">Login</a> <!-- Login link -->
+            </nav> 
+        </div> 
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8 pt-24">
+        <h2 class="all-posts-title text-3xl font-semibold text-gray-800 mb-6">All Posts</h2> <!-- Title for all posts -->
+        <% if (posts.length > 0) { %> <!-- Check if there are posts -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"> <!-- Responsive grid for posts -->
+                <% posts.forEach(post => { %> <!-- Loop through each post -->
+                    <article class="post-card bg-white rounded-lg shadow-md p-6" 
+                             onclick="openModal('<%= post.title %>', '<%= post.content %>', '<%= post.user.username %>', '<%= post.location %>', '<%= post._id %>')"> <!-- Clickable post to open modal -->
+                        <h3 class="post-title text-2xl font-semibold text-gray-800 mb-2"><%= post.title %></h3> <!-- Post title -->
+                        <p class="text-gray-600 mb-2">By: <%= post.user.username %></p> <!-- Author of the post -->
+                        <p class="text-gray-600 mb-2 location">Location: <%= post.location %></p> <!-- Location of the post -->
+                        <div class="content-truncate">
+                            <p class="post-content text-gray-700 mt-2"><%= post.content %></p> <!-- Post content -->
+                        </div>
+                    </article>
+                <% }) %>
+            </div>
+        <% } else { %>
+            <p class="text-gray-600">No posts available.</p> <!-- Message when no posts are available -->
+        <% } %>
+    </main>
+
+    <!-- Modal Structure -->
+    <div id="myModal" class="modal">
+        <div class=" modal-content">
+            <span class="close" onclick="closeModal()">&times;</span> <!-- Close button for the modal -->
+            <h2 id="modalTitle" class="text-2xl font-semibold modal-title"></h2> <!-- Modal title -->
+            <p id="modalAuthor" class="text-gray-600 mb-2"></p> <!-- Author displayed in modal -->
+            <p id="modalLocation" class="location"></p> <!-- Location displayed in modal -->
+            <p id="modalContent" class="text-gray-700 mt-2"></p> <!-- Content displayed in modal -->
+        </div>
+    </div>
+
+    <footer class="footer-bg text-white mt-8">
+        <div class="max-w-7xl mx-auto px-4 py-4 text-center">
+            <p>&copy; 2024 TAAM. All rights reserved.</p> <!-- Footer copyright -->
+        </div>
+    </footer>
+
+    <script>
+        let currentPostId; // Variable to store the current post ID
+
+        // Function to open the modal and display post details
+        function openModal(title, content, author, location, postId) {
+            currentPostId = postId; // Store the current post ID
+            document.getElementById("modalTitle").innerText = title; // Set modal title
+            document.getElementById("modalAuthor").innerText = "By: " + author; // Set modal author
+            document.getElementById("modalLocation").innerText = "Location: " + location; // Set modal location
+            document.getElementById("modalContent").innerText = content; // Set modal content
+            document.getElementById("myModal").style.display = "block"; // Show the modal
+            document.getElementById("modalTitle").classList.add("modal-title"); // Add background color to modal title
+        }
+
+        // Function to close the modal
+        function closeModal() {
+            document.getElementById("myModal").style.display = "none"; // Hide the modal
+            document.getElementById("modalTitle").classList.remove("modal-title"); // Remove background color when closing
+        }
+
+        // Close the modal when clicking outside of it
+        window.onclick = function(event) {
+            const modal = document.getElementById("myModal");
+            if (event.target == modal) {
+                closeModal(); // Close modal if clicked outside
+            }
+        }
+    </script>
+</body>
+</html>

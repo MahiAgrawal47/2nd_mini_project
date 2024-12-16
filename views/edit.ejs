@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Post - User Profile</title>
+    <!-- Link to Tailwind CSS for styling -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Link to Google Fonts for Lobster -->
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Body styling with background color and gradient */
+        body {
+            background-color: #EDE6D4; /* Base color */
+            background-image: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.1) 75%, rgba(255, 255, 255, 0.1)), 
+                              linear-gradient(225deg, rgba(255, 255, 255, 0.1) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.1) 75%, rgba(255, 255, 255, 0.1));
+            background-size: 20px 20px; /* Size of the lines */
+        }
+        /* Styling for the main title */
+        h1 {
+            font-family: 'Lobster', cursive; /* Use Lobster font */
+            font-size: 3rem; /* Adjust font size as needed */
+            text-align: center; /* Center align the title */
+        }
+        /* Styling for the subtitle */
+        h5 {
+            font-family: Georgia, 'Times New Roman', Times, serif, cursive; /* Use Georgia font */
+            font-size: 1rem; /* Adjust font size as needed */
+            text-align: center; /* Center align the subtitle */
+            padding: 5px; /* Padding around the subtitle */
+        }
+    </style>
+    <script>
+        // Function to automatically resize the textarea based on content
+        function autoResizeTextarea(element) {
+            element.style.height = 'auto'; // Reset height
+            element.style.height = element.scrollHeight + 'px'; // Set height to scrollHeight
+        }
+    </script>
+</head>
+<body>
+    <div class="max-w-4xl mx-auto px-4 py-8">
+        <header class="bg-white shadow-md rounded-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold text-gray-800">User  Profile</h1> <!-- Main title for the user profile -->
+            <h5 class="text-xl font-semibold text-gray-600 mt-2">Edit Your Post</h5> <!-- Subtitle for editing the post -->
+        </header>
+
+        <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+            <form action="/update/<%= post._id %>" method="post"> <!-- Form to update the post -->
+                <!-- Title Input -->
+                <input type="text" name="title" placeholder="Enter post title" required 
+                       class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 mb-4" 
+                       value="<%= post.title %>" /> <!-- Pre-fill with current post title -->
+
+                <!-- Content Textarea -->
+                <textarea name="content" placeholder="Write new content here..." required 
+                          class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 resize-none" 
+                          rows="3" oninput="autoResizeTextarea(this)"><%= post.content %></textarea> <!-- Pre-fill with current post content -->
+
+                <!-- Location Input -->
+                <input type="text" name="location" placeholder="Enter location" required 
+                       class="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 mb-4" 
+                       value="<%= post.location %>" /> <!-- Pre-fill with current post location -->
+
+                <!-- Update Button -->
+                <button type="submit" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200">Update</button> <!-- Button to submit the form -->
+            </form>
+        </div>
+    </div>
+</body>
+</html>
